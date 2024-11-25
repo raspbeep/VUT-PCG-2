@@ -66,13 +66,13 @@ int main(int argc, char **argv)
    *       Data pointer       consecutive elements        element in FLOATS,
    *                          in FLOATS, not bytes            not bytes
   */
-  MemDesc md(nullptr,                 0,                          0,
-             nullptr,                 0,                          0,
-             nullptr,                 0,                          0,
-             nullptr,                 0,                          0,
-             nullptr,                 0,                          0,
-             nullptr,                 0,                          0,
-             nullptr,                 0,                          0,
+  MemDesc md(&particles->positions_weights->x,                  4,                          0,
+             &particles->positions_weights->y,                  4,                          0,
+             &particles->positions_weights->z,                  4,                          0,
+             &particles->velocities->x,                         3,                          0,
+             &particles->velocities->y,                         3,                          0,
+             &particles->velocities->z,                         3,                          0,
+             &particles->positions_weights->w,                  4,                          0,
              N,
              recordsCount);
 
@@ -93,7 +93,8 @@ int main(int argc, char **argv)
   /********************************************************************************************************************/
   /*                                     TODO: Memory transfer CPU -> GPU                                             */
   /********************************************************************************************************************/
-
+  particles[0].copyToDevice();
+  particles[1].copyToDevice();
 
   
   // Start measurement
@@ -107,8 +108,7 @@ int main(int argc, char **argv)
     /******************************************************************************************************************/
     /*                                        TODO: GPU computation                                                   */
     /******************************************************************************************************************/
-
-
+    calculateVelocity(particles[srcIdx], particles[dstIdx], N, dt);
   }
 
   const unsigned resIdx = steps % 2;    // result particles index
@@ -123,7 +123,7 @@ int main(int argc, char **argv)
   /********************************************************************************************************************/
   /*                                     TODO: Memory transfer GPU -> CPU                                             */
   /********************************************************************************************************************/
-
+  particles[resIdx].copyToHost();
 
 
   // Compute reference center of mass on CPU

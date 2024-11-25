@@ -62,7 +62,9 @@ struct Particles
   /* TODO: Particles data structure optimized for use on GPU. Use float3 and float4 structures defined in file Vec.h  */
   /********************************************************************************************************************/
 
-
+  const unsigned mN;
+  float4 *positions_weights;
+  float3 *velocities;
 };
 
 /**

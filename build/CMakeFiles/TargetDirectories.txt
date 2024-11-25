@@ -1,0 +1,8 @@
+/home/xkrato61/pcg/PCG-proj2/build/CMakeFiles/gen.dir
+/home/xkrato61/pcg/PCG-proj2/build/CMakeFiles/nbodyCpu.dir
+/home/xkrato61/pcg/PCG-proj2/build/CMakeFiles/nbody0.dir
+/home/xkrato61/pcg/PCG-proj2/build/CMakeFiles/nbody1.dir
+/home/xkrato61/pcg/PCG-proj2/build/CMakeFiles/nbody2.dir
+/home/xkrato61/pcg/PCG-proj2/build/CMakeFiles/nbody3.dir
+/home/xkrato61/pcg/PCG-proj2/build/CMakeFiles/edit_cache.dir
+/home/xkrato61/pcg/PCG-proj2/build/CMakeFiles/rebuild_cache.dir

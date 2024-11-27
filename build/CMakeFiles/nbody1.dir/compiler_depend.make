@@ -652,6 +652,13 @@ CMakeFiles/nbody1.dir/Step1/main.cpp.o: /home/xkrato61/pcg/PCG-proj2/Step1/main.
   /usr/include/bits/types/error_t.h \
   /apps/all/GCCcore/12.2.0/include/c++/12.2.0/bits/charconv.h \
   /apps/all/GCCcore/12.2.0/include/c++/12.2.0/bits/basic_string.tcc \
+  /apps/all/GCCcore/12.2.0/include/c++/12.2.0/cstring \
+  /apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/include/bits/c++config.h \
+  /usr/include/string.h \
+  /usr/include/bits/libc-header-start.h \
+  /apps/all/GCCcore/12.2.0/lib/gcc/x86_64-pc-linux-gnu/12.2.0/include/stddef.h \
+  /usr/include/strings.h \
+  /apps/all/GCCcore/12.2.0/lib/gcc/x86_64-pc-linux-gnu/12.2.0/include/stddef.h \
   /home/xkrato61/pcg/PCG-proj2/Step1/nbody.h \
   /home/xkrato61/pcg/PCG-proj2/Commons/h5Helper.h \
   /apps/all/GCCcore/12.2.0/include/c++/12.2.0/cstddef \
@@ -1205,6 +1212,10 @@ CMakeFiles/nbody1.dir/Step1/nbody.cpp.o: /home/xkrato61/pcg/PCG-proj2/Step1/nbod
 
 /home/xkrato61/pcg/PCG-proj2/Step1/nbody.cpp:
 
+/usr/include/strings.h:
+
+/usr/include/string.h:
+
 /apps/all/GCCcore/12.2.0/include/c++/12.2.0/bits/parse_numbers.h:
 
 /apps/all/GCCcore/12.2.0/include/c++/12.2.0/ctime:
@@ -1328,6 +1339,8 @@ CMakeFiles/nbody1.dir/Step1/nbody.cpp.o: /home/xkrato61/pcg/PCG-proj2/Step1/nbod
 /usr/include/bits/types.h:
 
 /apps/all/GCCcore/12.2.0/lib/gcc/x86_64-pc-linux-gnu/12.2.0/include/stdint.h:
+
+/apps/all/GCCcore/12.2.0/include/c++/12.2.0/cstring:
 
 /usr/include/bits/types/__locale_t.h:
 

@@ -36,7 +36,7 @@ Particles::Particles(const unsigned N): mN(N)
   positions_weights = new float4[N];
   velocities = new float3[N];
 
-  #pragma acc enter data copyin(this)
+  #pragma acc enter data copyin(this[0:1])
   #pragma acc enter data create(positions_weights[0:mN])
   #pragma acc enter data create(velocities[0:mN])
 }
@@ -120,7 +120,7 @@ void calculateGravitationVelocity(Particles& __restrict p, Velocities& __restric
   /*                    TODO: Calculate gravitation velocity, see reference CPU version,                             */
   /*                            you can use overloaded operators defined in Vec.h                                    */
   /*******************************************************************************************************************/
-  #pragma acc parallel loop
+  #pragma acc parallel loop present(p, tmpVel)
   for (unsigned i = 0u; i < N; ++i) {
     float4 newVel{};
 
@@ -161,27 +161,31 @@ void calculateCollisionVelocity(Particles& __restrict p, Velocities& __restrict 
   /*                            you can use overloaded operators defined in Vec.h                                    */
   /*******************************************************************************************************************/
   
-  #pragma acc parallel loop 
-  for (unsigned i = 0u; i < N; ++i) {
-    float3 newVel;
+  #pragma acc parallel loop present(p, tmpVel)
+  for (unsigned i = 0u; i < N; ++i)
+  {
+    float3 newVel = tmpVel.velocities[i];
+
     const float4 particle = p.positions_weights[i];
-    const float3 particleVel = p.velocities[i];
+    const float3 particleVel  = p.velocities[i];
+
     #pragma acc loop seq
-    for (unsigned j = 0u; j < N; ++j) {
-      const float4 otherParticle = p.positions_weights[i];
-      const float3 otherParticleVel = p.velocities[i];
+    for (unsigned j = 0u; j < N; ++j)
+    {
+      const float4 otherParticle = p.positions_weights[j];
+      const float3 otherParticleVel  = p.velocities[j];
 
       const float4 diff = otherParticle - particle;
 
-      const float r2 = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
-      const float r = std::sqrt(r2);
+      const float r = sqrtf(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z);
 
       if (r > 0.f && r < COLLISION_DISTANCE) {
         const float invWeightSum = 1 / (particle.w + otherParticle.w);
         newVel += 2.f * otherParticle.w * (otherParticleVel - particleVel) * invWeightSum;
       }
     }
-    tmpVel.velocities[i] += newVel;
+
+    tmpVel.velocities[i] = newVel;
   }
 }// end of calculate_collision_velocity
 //----------------------------------------------------------------------------------------------------------------------
@@ -199,19 +203,24 @@ void updateParticles(Particles& p, Velocities& tmpVel, const unsigned N, float d
   /*                    TODO: Update particles position and velocity, see reference CPU version,                     */
   /*                            you can use overloaded operators defined in Vec.h                                    */
   /*******************************************************************************************************************/
-  for (unsigned i = 0u; i < N; ++i) {
-    float4 pos = p.positions_weights[i];
-    float3 vel = p.velocities[i] + tmpVel.velocities[i];
+# pragma acc parallel loop present(p, tmpVel)
+  for (unsigned i = 0u; i < N; ++i)
+  {
+    float4 particle = p.positions_weights[i];
+    float3 vel  = p.velocities[i];
 
-    pos.x += vel.x * dt;
-    pos.y += vel.y * dt;
-    pos.z += vel.z * dt;
+    const float3 newVel = tmpVel.velocities[i];
 
-    p.positions_weights[i] = pos;
+    vel += newVel;
 
     p.velocities[i] = vel;
-  }
 
+    particle.x += vel.x * dt;
+    particle.y += vel.y * dt;
+    particle.z += vel.z * dt;
+
+    p.positions_weights[i] = particle;
+  }
 }// end of update_particle
 //----------------------------------------------------------------------------------------------------------------------
 

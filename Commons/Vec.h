@@ -32,7 +32,7 @@ using float4 = Vec4<float>;
  * @tparam T Type of vector components
  */
 template<typename T>
-struct alignas(16) Vec3
+struct Vec3
 {
   Vec3() = default;
   constexpr Vec3(T value);
@@ -67,7 +67,7 @@ struct alignas(16) Vec3
  * @tparam T Type of vector components
  */
 template<typename T>
-struct alignas(16) Vec4
+struct Vec4
 {
   Vec4() = default;
   constexpr Vec4(T value);

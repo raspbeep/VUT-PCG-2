@@ -73,15 +73,15 @@ CMakeFiles/gen.dir/Commons/gen.cpp.o: CMakeFiles/gen.dir/flags.make
 CMakeFiles/gen.dir/Commons/gen.cpp.o: /home/xkrato61/pcg/PCG-proj2/Commons/gen.cpp
 CMakeFiles/gen.dir/Commons/gen.cpp.o: CMakeFiles/gen.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/xkrato61/pcg/PCG-proj2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/gen.dir/Commons/gen.cpp.o"
-	/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/nvc++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/gen.dir/Commons/gen.cpp.o -MF CMakeFiles/gen.dir/Commons/gen.cpp.o.d -o CMakeFiles/gen.dir/Commons/gen.cpp.o -c /home/xkrato61/pcg/PCG-proj2/Commons/gen.cpp
+	/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/pgc++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/gen.dir/Commons/gen.cpp.o -MF CMakeFiles/gen.dir/Commons/gen.cpp.o.d -o CMakeFiles/gen.dir/Commons/gen.cpp.o -c /home/xkrato61/pcg/PCG-proj2/Commons/gen.cpp
 
 CMakeFiles/gen.dir/Commons/gen.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/gen.dir/Commons/gen.cpp.i"
-	/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/nvc++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/xkrato61/pcg/PCG-proj2/Commons/gen.cpp > CMakeFiles/gen.dir/Commons/gen.cpp.i
+	/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/pgc++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/xkrato61/pcg/PCG-proj2/Commons/gen.cpp > CMakeFiles/gen.dir/Commons/gen.cpp.i
 
 CMakeFiles/gen.dir/Commons/gen.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/gen.dir/Commons/gen.cpp.s"
-	/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/nvc++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/xkrato61/pcg/PCG-proj2/Commons/gen.cpp -o CMakeFiles/gen.dir/Commons/gen.cpp.s
+	/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/pgc++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/xkrato61/pcg/PCG-proj2/Commons/gen.cpp -o CMakeFiles/gen.dir/Commons/gen.cpp.s
 
 # Object files for target gen
 gen_OBJECTS = \

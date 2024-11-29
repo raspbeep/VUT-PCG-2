@@ -68,7 +68,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-O3 -fPIC -tp=zen2 -acc=gpu -Minfo=accel -mp=multicore -fast -O3 -DNDEBUG -gpu=ccall,fastmath,pinned"
+					"fragment" : "-O3 -fPIC -tp=zen2 -acc=gpu -Minfo=accel -mp=multicore -g -O0 -gpu=ccall,debug,pinned"
 				},
 				{
 					"fragment" : "--c++17 --gnu_extensions"
@@ -124,7 +124,7 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "-O3 -fPIC -tp=zen2 -acc=gpu -Minfo=accel -mp=multicore -fast -O3 -DNDEBUG -gpu=ccall,fastmath,pinned",
+				"fragment" : "-O3 -fPIC -tp=zen2 -acc=gpu -Minfo=accel -mp=multicore -g -O0 -gpu=ccall,debug,pinned",
 				"role" : "flags"
 			},
 			{

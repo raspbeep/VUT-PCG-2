@@ -2,18 +2,6 @@
 	"entries" : 
 	[
 		{
-			"name" : "ACC_TARGET",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "No help, variable specified on the command line."
-				}
-			],
-			"type" : "UNINITIALIZED",
-			"value" : "gpu"
-		},
-		{
 			"name" : "Assignment1_BINARY_DIR",
 			"properties" : 
 			[
@@ -87,11 +75,11 @@
 			[
 				{
 					"name" : "HELPSTRING",
-					"value" : "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel ..."
+					"value" : "No help, variable specified on the command line."
 				}
 			],
 			"type" : "STRING",
-			"value" : "Release"
+			"value" : "Debug"
 		},
 		{
 			"name" : "CMAKE_CACHEFILE_DIR",
@@ -206,8 +194,8 @@
 					"value" : "CXX compiler"
 				}
 			],
-			"type" : "STRING",
-			"value" : "/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/nvc++"
+			"type" : "FILEPATH",
+			"value" : "/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/pgc++"
 		},
 		{
 			"name" : "CMAKE_CXX_FLAGS",
@@ -510,16 +498,12 @@
 			"properties" : 
 			[
 				{
-					"name" : "ADVANCED",
-					"value" : "1"
-				},
-				{
 					"name" : "HELPSTRING",
-					"value" : "Enable/Disable output of compile commands during generation."
+					"value" : "No help, variable specified on the command line."
 				}
 			],
 			"type" : "BOOL",
-			"value" : ""
+			"value" : "TRUE"
 		},
 		{
 			"name" : "CMAKE_EXTRA_GENERATOR",

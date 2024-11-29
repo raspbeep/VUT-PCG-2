@@ -145,7 +145,7 @@
 						"m"
 					]
 				},
-				"path" : "/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/nvc++",
+				"path" : "/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/pgc++",
 				"version" : "24.3.0"
 			},
 			"language" : "CXX",

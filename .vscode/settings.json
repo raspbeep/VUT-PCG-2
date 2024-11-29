@@ -6,6 +6,8 @@
     "array": "cpp",
     "string": "cpp",
     "string_view": "cpp",
-    "vector": "cpp"
-  }
+    "vector": "cpp",
+    "chrono": "cpp"
+  },
+  "C_Cpp.default.compilerPath": "/apps/all/GCCcore/12.2.0/bin/gcc"
 }

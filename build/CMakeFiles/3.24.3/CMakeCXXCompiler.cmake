@@ -1,4 +1,4 @@
-set(CMAKE_CXX_COMPILER "/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/nvc++")
+set(CMAKE_CXX_COMPILER "/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/pgc++")
 set(CMAKE_CXX_COMPILER_ARG1 "")
 set(CMAKE_CXX_COMPILER_ID "NVHPC")
 set(CMAKE_CXX_COMPILER_VERSION "24.3.0")

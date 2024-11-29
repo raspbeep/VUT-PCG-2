@@ -2,7 +2,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "nbodyCpu"
+			"path" : "nbody1"
 		}
 	],
 	"backtrace" : 1,
@@ -29,7 +29,7 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 51,
+				"line" : 57,
 				"parent" : 0
 			},
 			{
@@ -68,7 +68,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-O3 -fPIC -tp=zen2 -acc=gpu -Minfo=accel -mp=multicore -fast -O3 -DNDEBUG -gpu=ccall,fastmath,pinned"
+					"fragment" : "-O3 -fPIC -tp=zen2 -acc=gpu -Minfo=accel -mp=multicore -g -O0 -gpu=ccall,debug,pinned"
 				},
 				{
 					"fragment" : "--c++17 --gnu_extensions"
@@ -118,13 +118,13 @@
 			]
 		}
 	],
-	"id" : "nbodyCpu::@6890427a1f51a3e7e1df",
+	"id" : "nbody1::@6890427a1f51a3e7e1df",
 	"link" : 
 	{
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "-O3 -fPIC -tp=zen2 -acc=gpu -Minfo=accel -mp=multicore -fast -O3 -DNDEBUG -gpu=ccall,fastmath,pinned",
+				"fragment" : "-O3 -fPIC -tp=zen2 -acc=gpu -Minfo=accel -mp=multicore -g -O0 -gpu=ccall,debug,pinned",
 				"role" : "flags"
 			},
 			{
@@ -172,8 +172,8 @@
 		],
 		"language" : "CXX"
 	},
-	"name" : "nbodyCpu",
-	"nameOnDisk" : "nbodyCpu",
+	"name" : "nbody1",
+	"nameOnDisk" : "nbody1",
 	"paths" : 
 	{
 		"build" : ".",
@@ -196,13 +196,13 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "Cpu/main.cpp",
+			"path" : "Step1/main.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "Cpu/nbody.cpp",
+			"path" : "Step1/nbody.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{

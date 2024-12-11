@@ -129,7 +129,6 @@ int main(int argc, char **argv)
   {
     centerOfMass(particles[resIdx], comBuffer, N);
   }
-  
 
   // End measurement
   const auto end = std::chrono::steady_clock::now();
@@ -166,7 +165,8 @@ int main(int argc, char **argv)
   /********************************************************************************************************************/
   /*                                TODO: Free center of mass buffer memory                                           */
   /********************************************************************************************************************/
-
+  #pragma acc exit data delete(comBuffer[0:1])
+  delete comBuffer;
 
 }// end of main
 //----------------------------------------------------------------------------------------------------------------------

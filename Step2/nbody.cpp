@@ -166,7 +166,6 @@ void centerOfMass(Particles& p, float4* comBuffer, const unsigned N)
     comW += particle.w;
   }
 
-
   *comBuffer = {comX, comY, comZ, comW};
 }// end of centerOfMass
 //----------------------------------------------------------------------------------------------------------------------

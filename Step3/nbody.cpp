@@ -32,15 +32,25 @@ constexpr float COLLISION_DISTANCE = 0.01f;
  * @brief Constructor
  * @param N - Number of particles
  */
-Particles::Particles(const unsigned N)
+Particles::Particles(const unsigned N): mN(N)
 {
+  positions_weights = new float4[N];
+  velocities = new float3[N];
 
+  #pragma acc enter data copyin(this[0:1])
+  #pragma acc enter data create(positions_weights[0:mN])
+  #pragma acc enter data create(velocities[0:mN])
 }
 
 /// @brief Destructor
 Particles::~Particles()
 {
+  #pragma acc exit data delete(positions_weights)
+  #pragma acc exit data delete(velocities)
+  #pragma acc exit data delete(this)
 
+  delete[] positions_weights;
+  delete[] velocities;
 }
 
 /**
@@ -48,7 +58,8 @@ Particles::~Particles()
  */
 void Particles::copyToDevice()
 {
-
+  #pragma acc update device(positions_weights[0:mN])
+  #pragma acc update device(velocities[0:mN])
 }
 
 /**
@@ -56,7 +67,8 @@ void Particles::copyToDevice()
  */
 void Particles::copyToHost()
 {
-
+  #pragma acc update host(positions_weights[0:mN])
+  #pragma acc update host(velocities[0:mN])
 }
 
 /*********************************************************************************************************************/
@@ -74,8 +86,46 @@ void calculateVelocity(Particles& pIn, Particles& pOut, const unsigned N, float 
   /*                    TODO: Calculate gravitation velocity, see reference CPU version,                             */
   /*                            you can use overloaded operators defined in Vec.h                                    */
   /*******************************************************************************************************************/
+  #pragma acc parallel loop present(pIn, pOut)
+  for (unsigned i = 0u; i < N; ++i) {
+    float4 newVelGrav{};
+    float3 newVelColl{};
 
+    const float4 particle = pIn.positions_weights[i];
+    const float3 particleVel = pIn.velocities[i];
 
+    #pragma acc loop seq
+    for (unsigned j = 0u; j < N; ++j) {
+      const float4 otherParticle = pIn.positions_weights[j];
+      const float3 otherParticleVel = pIn.velocities[j];
+
+      const float4 diff = otherParticle - particle;
+      const float r2 = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
+      const float r = std::sqrt(r2);
+
+      if (r > COLLISION_DISTANCE) {
+        const float r3 = r2 * r;
+        const float f = G * otherParticle.w / (r3 + FLT_MIN);
+        newVelGrav += diff * f;
+
+      } else if (r > 0.f && r < COLLISION_DISTANCE) {
+        const float invWeightSum = 1 / (particle.w + otherParticle.w);
+        newVelColl += 2.f * otherParticle.w * (otherParticleVel - particleVel) * invWeightSum;
+      }
+    }
+
+    const float updatedVelX = particleVel.x + (newVelGrav.x * dt) + newVelColl.x;
+    const float updatedVelY = particleVel.y + (newVelGrav.y * dt) + newVelColl.y;
+    const float updatedVelZ = particleVel.z + (newVelGrav.z * dt) + newVelColl.z;
+
+    pOut.positions_weights[i].x = particle.x + (updatedVelX * dt);
+    pOut.positions_weights[i].y = particle.y + (updatedVelY * dt);
+    pOut.positions_weights[i].z = particle.z + (updatedVelZ * dt);
+
+    pOut.velocities[i].x = updatedVelX;
+    pOut.velocities[i].y = updatedVelY;
+    pOut.velocities[i].z = updatedVelZ;
+  }
 }// end of calculate_gravitation_velocity
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -90,8 +140,33 @@ void centerOfMass(Particles& p, float4* comBuffer, const unsigned N)
   /********************************************************************************************************************/
   /*                 TODO: Calculate partiles center of mass inside center of mass buffer                             */
   /********************************************************************************************************************/
+  float comX{};
+  float comY{};
+  float comZ{};
+  float comW{};
 
-  
+  #pragma acc loop seq reduction(+:comX, comY, comZ, comW)
+  for (std::size_t i{}; i < N; i++)
+  {
+    const float4 particle = p.positions_weights[i];
+
+    // Calculate the vector on the line connecting current body and most recent position of center-of-mass
+    // Calculate weight ratio only if at least one particle isn't massless
+    const float4 d = {
+      particle.x - comX,
+      particle.y - comY,
+      particle.z - comZ,
+      (particle.w + comW > 0.f) ? (particle.w / (particle.w + comW)) : 0.f
+    };
+
+    // Update position and weight of the center-of-mass according to the weight ration and vector
+    comX += d.x * d.w;
+    comY += d.y * d.w;
+    comZ += d.z * d.w;
+    comW += particle.w;
+  }
+
+  *comBuffer = {comX, comY, comZ, comW};
 }// end of centerOfMass
 //----------------------------------------------------------------------------------------------------------------------
 

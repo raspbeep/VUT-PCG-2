@@ -17,6 +17,8 @@
 #include <cstdio>
 #include <chrono>
 #include <string>
+#include <cstring>
+
 
 #include "nbody.h"
 #include "h5Helper.h"
@@ -66,13 +68,13 @@ int main(int argc, char **argv)
    *       Data pointer       consecutive elements        element in FLOATS,
    *                          in FLOATS, not bytes            not bytes
   */
-  MemDesc md(nullptr,                 0,                          0,
-             nullptr,                 0,                          0,
-             nullptr,                 0,                          0,
-             nullptr,                 0,                          0,
-             nullptr,                 0,                          0,
-             nullptr,                 0,                          0,
-             nullptr,                 0,                          0,
+  MemDesc md(&particles[0].positions_weights[0].x,                  4,                          0,
+             &particles[0].positions_weights[0].y,                  4,                          0,
+             &particles[0].positions_weights[0].z,                  4,                          0,
+             &particles[0].velocities[0].x,                         3,                          0,
+             &particles[0].velocities[0].y,                         3,                          0,
+             &particles[0].velocities[0].z,                         3,                          0,
+             &particles[0].positions_weights[0].w,                  4,                          0,
              N,
              recordsCount);
 
@@ -93,19 +95,23 @@ int main(int argc, char **argv)
   /********************************************************************************************************************/
   /*                   TODO: Allocate memory for center of mass buffer. Remember to clear it.                         */
   /********************************************************************************************************************/
-  float4* comBuffer = {};
+  float4 *comBuffer = new float4{};
+  #pragma acc enter data create(comBuffer[0:1])
 
   /********************************************************************************************************************/
   /*                                      TODO: Set openacc stream ids                                                */
   /********************************************************************************************************************/
-
-  
+  #pragma acc set device_num(0) device_type(acc_device_nvidia)
+  #pragma acc set device_num(1) device_type(acc_device_nvidia)
 
   /********************************************************************************************************************/
   /*                                     TODO: Memory transfer CPU -> GPU                                             */
   /********************************************************************************************************************/
+  std::memcpy(particles[1].velocities, particles[0].velocities, sizeof(float3) * N);
+  std::memcpy(particles[1].positions_weights, particles[0].positions_weights, sizeof(float4) * N);
 
-
+  particles[0].copyToDevice();
+  particles[1].copyToDevice();
 
   // Lambda for checking if we should write current step to the file
   auto shouldWrite = [writeFreq](unsigned s) -> bool
@@ -136,19 +142,25 @@ int main(int argc, char **argv)
     /******************************************************************************************************************/
     /*                                        TODO: GPU computation                                                   */
     /******************************************************************************************************************/
-
-
+    if (shouldWrite(s))
+    {
+      #pragma acc update device(particles[srcIdx].positions_weights[0:N]) async(1)
+      #pragma acc update device(particles[srcIdx].velocities[0:N]) async(1)
+      #pragma acc wait(1)
+      h5Helper.writeParticleData(getRecordNum(s));
+    }
+    calculateVelocity(particles[srcIdx], particles[dstIdx], N, dt);
   }
-
   const unsigned resIdx = steps % 2;    // result particles index
 
   /********************************************************************************************************************/
   /*                          TODO: Invocation of center of mass kernel, do not forget to add                         */
   /*                              additional synchronization and set appropriate stream                               */
   /********************************************************************************************************************/
-
-
-  const float4 comFinal = {};
+  #pragma acc data copyin(comBuffer[0:1]) copyout(comBuffer[0:1])
+  {
+    centerOfMass(particles[resIdx], comBuffer, N);
+  }
 
   // End measurement
   const auto end = std::chrono::steady_clock::now();
@@ -157,12 +169,10 @@ int main(int argc, char **argv)
   const float elapsedTime = std::chrono::duration<float>(end - start).count();
   std::printf("Time: %f s\n", elapsedTime);
 
-  
-
   /********************************************************************************************************************/
   /*                                     TODO: Memory transfer GPU -> CPU                                             */
   /********************************************************************************************************************/
-
+  particles[resIdx].copyToHost();
 
 
   // Compute reference center of mass on CPU
@@ -175,19 +185,19 @@ int main(int argc, char **argv)
               refCenterOfMass.w);
 
   std::printf("Center of mass on GPU: %f, %f, %f, %f\n",
-              comFinal.x,
-              comFinal.y,
-              comFinal.z,
-              comFinal.w);
+              comBuffer->x,
+              comBuffer->y,
+              comBuffer->z,
+              comBuffer->w);
 
   // Writing final values to the file
-  h5Helper.writeComFinal(comFinal);
+  h5Helper.writeComFinal(*comBuffer);
   h5Helper.writeParticleDataFinal();
 
   /********************************************************************************************************************/
   /*                                TODO: Free center of mass buffer memory                                           */
   /********************************************************************************************************************/
-
-
+  #pragma acc exit data delete(comBuffer[0:1])
+  delete comBuffer;
 }// end of main
 //----------------------------------------------------------------------------------------------------------------------

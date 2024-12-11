@@ -145,28 +145,25 @@ void centerOfMass(Particles& p, float4* comBuffer, const unsigned N)
   float comZ{};
   float comW{};
 
-  #pragma acc loop seq reduction(+:comX, comY, comZ, comW)
+  #pragma acc parallel loop copyin(comX, comY, comZ, comW)
   for (std::size_t i{}; i < N; i++)
   {
     const float4 particle = p.positions_weights[i];
 
-    // Calculate the vector on the line connecting current body and most recent position of center-of-mass
-    // Calculate weight ratio only if at least one particle isn't massless
     const float4 d = {
       particle.x - comX,
       particle.y - comY,
       particle.z - comZ,
       (particle.w + comW > 0.f) ? (particle.w / (particle.w + comW)) : 0.f
     };
-
-    // Update position and weight of the center-of-mass according to the weight ration and vector
-    comX += d.x * d.w;
-    comY += d.y * d.w;
-    comZ += d.z * d.w;
-    comW += particle.w;
+     
+      comX += d.x * d.w; 
+      comY += d.y * d.w; 
+      comZ += d.z * d.w;
+      comW += particle.w;
   }
 
-
+  #pragma acc update host(comX, comY, comZ, comW)
   *comBuffer = {comX, comY, comZ, comW};
 }// end of centerOfMass
 //----------------------------------------------------------------------------------------------------------------------

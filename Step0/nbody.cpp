@@ -114,35 +114,35 @@ void Velocities::copyToHost()
  * @param N      - Number of particles
  * @param dt     - Size of the time step
  */
-void calculateGravitationVelocity(Particles& __restrict p, Velocities& __restrict tmpVel, const unsigned N, float dt)
+void calculateGravitationVelocity(Particles& p, Velocities& tmpVel, const unsigned N, float dt)
 {
   /*******************************************************************************************************************/
   /*                    TODO: Calculate gravitation velocity, see reference CPU version,                             */
   /*                            you can use overloaded operators defined in Vec.h                                    */
   /*******************************************************************************************************************/
+
   #pragma acc parallel loop present(p, tmpVel)
-  for (unsigned i = 0u; i < N; ++i) {
-    float4 newVel{};
+  for (unsigned i = 0u; i < N; ++i)
+  {
+      float3 newVel{};
+      const float3 currPos = {p.positions_weights[i].x, p.positions_weights[i].y, p.positions_weights[i].z};
+      const float currWeight = p.positions_weights[i].w;
 
-    const float4 particle = p.positions_weights[i];
-
-    #pragma acc loop seq
-    for (unsigned j = 0u; j < N; ++j) {
-      const float4 otherParticle = p.positions_weights[j];
-      const float4 diff = otherParticle - particle;
-      const float r2 = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
-      const float r = std::sqrt(r2);
-
-      if (r > COLLISION_DISTANCE) {
-        const float r3 = r2 * r;
-        const float f = G * otherParticle.w / (r3 + FLT_MIN);
-        newVel += diff * f;
+      #pragma acc loop seq
+      for (unsigned j = 0u; j < N; ++j)
+      {
+        const float3 otherPos = {p.positions_weights[j].x, p.positions_weights[j].y, p.positions_weights[j].z};
+        const float3 d = otherPos - currPos;
+        const float r = d.abs();
+        const float r2 = r * r;
+        const float f = G * currWeight * p.positions_weights[j].w / (r2 + std::numeric_limits<float>::min());
+        
+        if (r > COLLISION_DISTANCE)
+        {
+            newVel += d / r * f;
+        }
       }
-    }
-
-    newVel *= dt;
-    
-    tmpVel.velocities[i] = newVel;
+      tmpVel.velocities[i] = newVel * (dt / currWeight);
   }
 }// end of calculate_gravitation_velocity
 //----------------------------------------------------------------------------------------------------------------------
@@ -161,7 +161,7 @@ void calculateCollisionVelocity(Particles& __restrict p, Velocities& __restrict 
   /*                            you can use overloaded operators defined in Vec.h                                    */
   /*******************************************************************************************************************/
   
-  #pragma acc parallel loop present(p, tmpVel)
+  #pragma acc parallel loop present(p, tmpVel) tile(32, 32)
   for (unsigned i = 0u; i < N; ++i)
   {
     float3 newVel = tmpVel.velocities[i];

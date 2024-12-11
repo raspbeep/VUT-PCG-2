@@ -73,43 +73,43 @@ CMakeFiles/nbodyCpu.dir/Cpu/main.cpp.o: CMakeFiles/nbodyCpu.dir/flags.make
 CMakeFiles/nbodyCpu.dir/Cpu/main.cpp.o: /home/xkrato61/pcg/PCG-proj2/Cpu/main.cpp
 CMakeFiles/nbodyCpu.dir/Cpu/main.cpp.o: CMakeFiles/nbodyCpu.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/xkrato61/pcg/PCG-proj2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/nbodyCpu.dir/Cpu/main.cpp.o"
-	/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/pgc++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/nbodyCpu.dir/Cpu/main.cpp.o -MF CMakeFiles/nbodyCpu.dir/Cpu/main.cpp.o.d -o CMakeFiles/nbodyCpu.dir/Cpu/main.cpp.o -c /home/xkrato61/pcg/PCG-proj2/Cpu/main.cpp
+	/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/nvc++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/nbodyCpu.dir/Cpu/main.cpp.o -MF CMakeFiles/nbodyCpu.dir/Cpu/main.cpp.o.d -o CMakeFiles/nbodyCpu.dir/Cpu/main.cpp.o -c /home/xkrato61/pcg/PCG-proj2/Cpu/main.cpp
 
 CMakeFiles/nbodyCpu.dir/Cpu/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/nbodyCpu.dir/Cpu/main.cpp.i"
-	/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/pgc++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/xkrato61/pcg/PCG-proj2/Cpu/main.cpp > CMakeFiles/nbodyCpu.dir/Cpu/main.cpp.i
+	/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/nvc++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/xkrato61/pcg/PCG-proj2/Cpu/main.cpp > CMakeFiles/nbodyCpu.dir/Cpu/main.cpp.i
 
 CMakeFiles/nbodyCpu.dir/Cpu/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/nbodyCpu.dir/Cpu/main.cpp.s"
-	/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/pgc++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/xkrato61/pcg/PCG-proj2/Cpu/main.cpp -o CMakeFiles/nbodyCpu.dir/Cpu/main.cpp.s
+	/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/nvc++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/xkrato61/pcg/PCG-proj2/Cpu/main.cpp -o CMakeFiles/nbodyCpu.dir/Cpu/main.cpp.s
 
 CMakeFiles/nbodyCpu.dir/Cpu/nbody.cpp.o: CMakeFiles/nbodyCpu.dir/flags.make
 CMakeFiles/nbodyCpu.dir/Cpu/nbody.cpp.o: /home/xkrato61/pcg/PCG-proj2/Cpu/nbody.cpp
 CMakeFiles/nbodyCpu.dir/Cpu/nbody.cpp.o: CMakeFiles/nbodyCpu.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/xkrato61/pcg/PCG-proj2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/nbodyCpu.dir/Cpu/nbody.cpp.o"
-	/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/pgc++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/nbodyCpu.dir/Cpu/nbody.cpp.o -MF CMakeFiles/nbodyCpu.dir/Cpu/nbody.cpp.o.d -o CMakeFiles/nbodyCpu.dir/Cpu/nbody.cpp.o -c /home/xkrato61/pcg/PCG-proj2/Cpu/nbody.cpp
+	/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/nvc++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/nbodyCpu.dir/Cpu/nbody.cpp.o -MF CMakeFiles/nbodyCpu.dir/Cpu/nbody.cpp.o.d -o CMakeFiles/nbodyCpu.dir/Cpu/nbody.cpp.o -c /home/xkrato61/pcg/PCG-proj2/Cpu/nbody.cpp
 
 CMakeFiles/nbodyCpu.dir/Cpu/nbody.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/nbodyCpu.dir/Cpu/nbody.cpp.i"
-	/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/pgc++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/xkrato61/pcg/PCG-proj2/Cpu/nbody.cpp > CMakeFiles/nbodyCpu.dir/Cpu/nbody.cpp.i
+	/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/nvc++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/xkrato61/pcg/PCG-proj2/Cpu/nbody.cpp > CMakeFiles/nbodyCpu.dir/Cpu/nbody.cpp.i
 
 CMakeFiles/nbodyCpu.dir/Cpu/nbody.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/nbodyCpu.dir/Cpu/nbody.cpp.s"
-	/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/pgc++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/xkrato61/pcg/PCG-proj2/Cpu/nbody.cpp -o CMakeFiles/nbodyCpu.dir/Cpu/nbody.cpp.s
+	/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/nvc++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/xkrato61/pcg/PCG-proj2/Cpu/nbody.cpp -o CMakeFiles/nbodyCpu.dir/Cpu/nbody.cpp.s
 
 CMakeFiles/nbodyCpu.dir/Commons/h5Helper.cpp.o: CMakeFiles/nbodyCpu.dir/flags.make
 CMakeFiles/nbodyCpu.dir/Commons/h5Helper.cpp.o: /home/xkrato61/pcg/PCG-proj2/Commons/h5Helper.cpp
 CMakeFiles/nbodyCpu.dir/Commons/h5Helper.cpp.o: CMakeFiles/nbodyCpu.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/xkrato61/pcg/PCG-proj2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/nbodyCpu.dir/Commons/h5Helper.cpp.o"
-	/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/pgc++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/nbodyCpu.dir/Commons/h5Helper.cpp.o -MF CMakeFiles/nbodyCpu.dir/Commons/h5Helper.cpp.o.d -o CMakeFiles/nbodyCpu.dir/Commons/h5Helper.cpp.o -c /home/xkrato61/pcg/PCG-proj2/Commons/h5Helper.cpp
+	/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/nvc++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/nbodyCpu.dir/Commons/h5Helper.cpp.o -MF CMakeFiles/nbodyCpu.dir/Commons/h5Helper.cpp.o.d -o CMakeFiles/nbodyCpu.dir/Commons/h5Helper.cpp.o -c /home/xkrato61/pcg/PCG-proj2/Commons/h5Helper.cpp
 
 CMakeFiles/nbodyCpu.dir/Commons/h5Helper.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/nbodyCpu.dir/Commons/h5Helper.cpp.i"
-	/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/pgc++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/xkrato61/pcg/PCG-proj2/Commons/h5Helper.cpp > CMakeFiles/nbodyCpu.dir/Commons/h5Helper.cpp.i
+	/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/nvc++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/xkrato61/pcg/PCG-proj2/Commons/h5Helper.cpp > CMakeFiles/nbodyCpu.dir/Commons/h5Helper.cpp.i
 
 CMakeFiles/nbodyCpu.dir/Commons/h5Helper.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/nbodyCpu.dir/Commons/h5Helper.cpp.s"
-	/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/pgc++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/xkrato61/pcg/PCG-proj2/Commons/h5Helper.cpp -o CMakeFiles/nbodyCpu.dir/Commons/h5Helper.cpp.s
+	/apps/all/NVHPC/24.3-CUDA-12.3.0/Linux_x86_64/24.3/compilers/bin/nvc++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/xkrato61/pcg/PCG-proj2/Commons/h5Helper.cpp -o CMakeFiles/nbodyCpu.dir/Commons/h5Helper.cpp.s
 
 # Object files for target nbodyCpu
 nbodyCpu_OBJECTS = \

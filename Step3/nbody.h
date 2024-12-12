@@ -19,6 +19,10 @@
 #include "h5Helper.h"
 #include "Vec.h"
 
+#define calculateVelocityStream  0
+#define centerOfMassStream 1
+#define dataTransferStream 2
+
 /**
  * @brief Particles data structure
  */
@@ -86,7 +90,7 @@ void calculateVelocity(Particles&     pIn,
  * @param N         - Number of particles
  */
 void centerOfMass(Particles&     p,
-                  float4*        comBuffer,
+                  float*        comBuffer,
                   const unsigned N);
 
 /**

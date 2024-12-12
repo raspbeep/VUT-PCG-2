@@ -94,8 +94,9 @@ int main(int argc, char **argv)
   /********************************************************************************************************************/
   /*                   TODO: Allocate memory for center of mass buffer. Remember to clear it.                         */
   /********************************************************************************************************************/
-  float4 *comBuffer = new float4{};
-  #pragma acc enter data create(comBuffer[0:1])
+  float *comBuffer = new float[4];
+  std::memset(comBuffer, 0, sizeof(float) * 4);
+  #pragma acc enter data copyin(comBuffer[0:4])
 
   /********************************************************************************************************************/
   /*                                     TODO: Memory transfer CPU -> GPU                                             */
@@ -125,10 +126,12 @@ int main(int argc, char **argv)
   /********************************************************************************************************************/
   /*                                 TODO: Invocation of center of mass kernel                                        */
   /********************************************************************************************************************/
-  #pragma acc data copyin(comBuffer[0:1]) copyout(comBuffer[0:1])
+  #pragma acc data copyin(comBuffer[0:4]) copyout(comBuffer[0:4])
   {
     centerOfMass(particles[resIdx], comBuffer, N);
   }
+
+  float4 comFinal = {comBuffer[0], comBuffer[1], comBuffer[2], comBuffer[3]};
 
   // End measurement
   const auto end = std::chrono::steady_clock::now();
@@ -153,20 +156,20 @@ int main(int argc, char **argv)
               refCenterOfMass.w);
 
   std::printf("Center of mass on GPU: %f, %f, %f, %f\n",
-              comBuffer->x,
-              comBuffer->y,
-              comBuffer->z,
-              comBuffer->w);
+              comFinal.x,
+              comFinal.y,
+              comFinal.z,
+              comFinal.w);
 
   // Writing final values to the file
-  h5Helper.writeComFinal(*comBuffer);
+  h5Helper.writeComFinal(comFinal);
   h5Helper.writeParticleDataFinal();
 
   /********************************************************************************************************************/
   /*                                TODO: Free center of mass buffer memory                                           */
   /********************************************************************************************************************/
-  #pragma acc exit data delete(comBuffer[0:1])
-  delete comBuffer;
+  #pragma acc exit data delete(comBuffer[0:4])
+  delete[] comBuffer;
 
 }// end of main
 //----------------------------------------------------------------------------------------------------------------------

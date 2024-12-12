@@ -95,14 +95,15 @@ int main(int argc, char **argv)
   /********************************************************************************************************************/
   /*                   TODO: Allocate memory for center of mass buffer. Remember to clear it.                         */
   /********************************************************************************************************************/
-  float4 *comBuffer = new float4{};
-  #pragma acc enter data create(comBuffer[0:1])
-
+  float *comBuffer = new float[4];
+  #pragma acc enter data create(comBuffer[0:4])
+  float4 comFinal = {0.f, 0.f, 0.f, 0.f};
   /********************************************************************************************************************/
   /*                                      TODO: Set openacc stream ids                                                */
   /********************************************************************************************************************/
-  #pragma acc set device_num(0) device_type(acc_device_nvidia)
-  #pragma acc set device_num(1) device_type(acc_device_nvidia)
+  // #pragma acc set device_num(calculateVelocityStream) device_type(acc_device_nvidia)
+  // #pragma acc set device_num(centerOfMassStream) device_type(acc_device_nvidia)
+  // #pragma acc set device_num(dataTransferStream) device_type(acc_device_nvidia)
 
   /********************************************************************************************************************/
   /*                                     TODO: Memory transfer CPU -> GPU                                             */
@@ -134,22 +135,42 @@ int main(int argc, char **argv)
   /*                           if (shouldWrite(s, writeFreq)) { ... }                                                 */
   /*                        Use getRecordNum lambda to get the record number.                                         */
   /********************************************************************************************************************/
+  unsigned int recordNum;
   for (unsigned s = 0u; s < steps; ++s)
   {
     const unsigned srcIdx = s % 2;        // source particles index
     const unsigned dstIdx = (s + 1) % 2;  // destination particles index
 
     /******************************************************************************************************************/
-    /*                                        TODO: GPU computation                                                   */
+    /*                                        GPU computation                                                         */
     /******************************************************************************************************************/
-    if (shouldWrite(s))
-    {
-      #pragma acc update device(particles[srcIdx].positions_weights[0:N]) async(1)
-      #pragma acc update device(particles[srcIdx].velocities[0:N]) async(1)
-      #pragma acc wait(1)
-      h5Helper.writeParticleData(getRecordNum(s));
-    }
+    #pragma acc wait(calculateVelocityStream)
     calculateVelocity(particles[srcIdx], particles[dstIdx], N, dt);
+    
+    if (shouldWrite(s)) {
+      recordNum = getRecordNum(s);
+      // transfer data to host
+      #pragma acc update host(particles[srcIdx].positions_weights[0:N]) async(dataTransferStream)
+      #pragma acc update host(particles[srcIdx].velocities[0:N]) async(dataTransferStream)
+
+      // clear the comBuffer in device
+      std::memset(comBuffer, 0, sizeof(float) * 4);
+      // clear the comBuffer in device
+      #pragma acc data copyin(comBuffer[0:4]) copyout(comBuffer[0:4])
+      {
+        // calculate center of mass
+        centerOfMass(particles[srcIdx], comBuffer, N);
+      }
+      // wait for the center of mass calculation
+      comFinal = {comBuffer[0], comBuffer[1], comBuffer[2], comBuffer[3]};
+      // write the center of mass to the file
+      h5Helper.writeCom(comFinal, recordNum);
+      
+      // wait for the data transfer and write the particle data to the file
+      #pragma acc wait(dataTransferStream)
+      h5Helper.writeParticleData(recordNum);
+    }
+
   }
   const unsigned resIdx = steps % 2;    // result particles index
 
@@ -157,11 +178,14 @@ int main(int argc, char **argv)
   /*                          TODO: Invocation of center of mass kernel, do not forget to add                         */
   /*                              additional synchronization and set appropriate stream                               */
   /********************************************************************************************************************/
-  #pragma acc data copyin(comBuffer[0:1]) copyout(comBuffer[0:1])
+  std::memset(comBuffer, 0, sizeof(float) * 4);
+  #pragma acc data copyin(comBuffer[0:4]) copyout(comBuffer[0:4])
   {
     centerOfMass(particles[resIdx], comBuffer, N);
   }
 
+  comFinal = {comBuffer[0], comBuffer[1], comBuffer[2], comBuffer[3]};
+  
   // End measurement
   const auto end = std::chrono::steady_clock::now();
 
@@ -172,8 +196,9 @@ int main(int argc, char **argv)
   /********************************************************************************************************************/
   /*                                     TODO: Memory transfer GPU -> CPU                                             */
   /********************************************************************************************************************/
+  #pragma acc wait(dataTransferStream)
+  #pragma acc wait(calculateVelocityStream)
   particles[resIdx].copyToHost();
-
 
   // Compute reference center of mass on CPU
   const float4 refCenterOfMass = centerOfMassRef(md);
@@ -185,19 +210,19 @@ int main(int argc, char **argv)
               refCenterOfMass.w);
 
   std::printf("Center of mass on GPU: %f, %f, %f, %f\n",
-              comBuffer->x,
-              comBuffer->y,
-              comBuffer->z,
-              comBuffer->w);
+              comFinal.x,
+              comFinal.y,
+              comFinal.z,
+              comFinal.w);
 
   // Writing final values to the file
-  h5Helper.writeComFinal(*comBuffer);
+  h5Helper.writeComFinal(comFinal);
   h5Helper.writeParticleDataFinal();
 
   /********************************************************************************************************************/
   /*                                TODO: Free center of mass buffer memory                                           */
   /********************************************************************************************************************/
-  #pragma acc exit data delete(comBuffer[0:1])
-  delete comBuffer;
+  #pragma acc exit data delete(comBuffer[0:4])
+  delete[] comBuffer;
 }// end of main
 //----------------------------------------------------------------------------------------------------------------------

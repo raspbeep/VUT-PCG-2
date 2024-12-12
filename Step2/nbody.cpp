@@ -135,38 +135,32 @@ void calculateVelocity(Particles& pIn, Particles& pOut, const unsigned N, float 
  * @param comBuffer - pointer to a center of mass buffer
  * @param N         - Number of particles
  */
-void centerOfMass(Particles& p, float4* comBuffer, const unsigned N)
+void centerOfMass(Particles& p, float* comBuffer, const unsigned N)
 {
   /********************************************************************************************************************/
   /*                 TODO: Calculate partiles center of mass inside center of mass buffer                             */
   /********************************************************************************************************************/
-  float comX{};
-  float comY{};
-  float comZ{};
-  float comW{};
+ float comx{}; 
+ float comy{}; 
+ float comz{}; 
+ float comw{};
 
-  #pragma acc loop seq reduction(+:comX, comY, comZ, comW)
-  for (std::size_t i{}; i < N; i++)
+  #pragma acc parallel loop present(p, comBuffer) reduction(+: comx, comy, comz, comw)
+  for (int i = 0; i < N; ++i)
   {
-    const float4 particle = p.positions_weights[i];
+    const float  w   = p.positions_weights[i].w;
+    const float3 pos = {p.positions_weights[i].x * w, p.positions_weights[i].y * w, p.positions_weights[i].z * w};
 
-    // Calculate the vector on the line connecting current body and most recent position of center-of-mass
-    // Calculate weight ratio only if at least one particle isn't massless
-    const float4 d = {
-      particle.x - comX,
-      particle.y - comY,
-      particle.z - comZ,
-      (particle.w + comW > 0.f) ? (particle.w / (particle.w + comW)) : 0.f
-    };
-
-    // Update position and weight of the center-of-mass according to the weight ration and vector
-    comX += d.x * d.w;
-    comY += d.y * d.w;
-    comZ += d.z * d.w;
-    comW += particle.w;
+    comx += pos.x;
+    comy += pos.y;
+    comz += pos.z;
+    comw += w;
   }
 
-  *comBuffer = {comX, comY, comZ, comW};
+  comBuffer[0] = comx / comw;
+  comBuffer[1] = comy / comw;
+  comBuffer[2] = comz / comw;
+  comBuffer[3] = comw;
 }// end of centerOfMass
 //----------------------------------------------------------------------------------------------------------------------
 

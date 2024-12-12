@@ -86,7 +86,7 @@ void calculateVelocity(Particles&     pIn,
  * @param N         - Number of particles
  */
 void centerOfMass(Particles&     p,
-                  float4*        comBuffer,
+                  float*        comBuffer,
                   const unsigned N);
 
 /**

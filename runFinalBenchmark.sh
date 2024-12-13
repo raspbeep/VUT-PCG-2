@@ -38,17 +38,19 @@ mkdir -p $OUTPUT_DIR
 
 printf "   N\t  Time\n"
 
-for i in {1..8}; do
-	N=$((2**i * 512))
+for i in {1..20}; do
+	N=$((i * 4096))
 
 	INPUT=$INPUT_DIR/Input$N.h5
 	OUTPUT=$OUTPUT_DIR/${NBODY_BINARY_NAME}Output${N}.h5
+	NCU_OUTPUT=prof-${N}.ncu-rep
 
 	if [ ! -f $INPUT ]; then
     $GEN_BINARY $N $INPUT >> /dev/null
 	fi
 
-	TIME=$($NBODY_BINARY $N $DT $STEPS $WRITE_INTENSITY $INPUT $OUTPUT | grep Time | tr -dc '[. [:digit:]]')
+	ncu --set full --launch-count 1 -o $NCU_OUTPUT -f $NBODY_BINARY $N $DT $STEPS $WRITE_INTENSITY $INPUT $OUTPUT
+	# TIME=$($NBODY_BINARY $N $DT $STEPS $WRITE_INTENSITY $INPUT $OUTPUT | grep Time | tr -dc '[. [:digit:]]')
 
 	printf "%5u:\t%fs\n" $N $TIME
 done

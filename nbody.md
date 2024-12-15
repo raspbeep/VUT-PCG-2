@@ -43,8 +43,15 @@
 
 ### Krok 0: Základní implementace
 **Vyskytla se nějaká anomále v naměřených časech? Pokud ano, vysvětlete:**
+Pre step0 som pozoroval 3 vyrazne skoky (figure.png) v casoch. Podla zisteni z nastroja 
+Nvdia Nsight Compute, skoky nastavaju kvoli cakaniu na pamatove operacie (warp stall).
+Najvacsie cakanie nastavalo pri nahravani dat druhej particle
+`const float4 otherParticle = p.positions_weights[j];` a pri matematicky najnarocnejsej
+casti vypoctu `const float f = G * otherParticle.w / (r3 + FLT_MIN);`.
 
-
+Pozorovane narasty v casoch vykonavania by sa dali vysvetlit:
+1. vycerpanim poctov registrov/zdielanej pamate na SM
+2. prekrocenie L2 cache kapacity alebo cache bandwidth saturacii
 
 ### Krok 1: Sloučení kernelů
 **Došlo ke zrychlení?**
@@ -53,16 +60,31 @@ Doslo k vyraznemu zrychleniu, obzvlast pre vacsie pocty castic. Ako vidno v pril
 45056 castic je cas Step0 takmer dvojnasobny oproti step1. 
 
 **Popište hlavní důvody:**
+Dovody zrychlenia po zluceni kernelov su: nizsia rezia pri spusteni jedneho kernelu namiesto troch a lepsie
+znovupouzitie pamate (kedze v algoritme je to "najdrahsia" operacia).
 
 ### Krok 2: Výpočet těžiště
 **Kolik kernelů je nutné použít k výpočtu?**
+Stacil jeden.
 
 **Kolik další paměti jste museli naalokovat?**
+4 float -> 16B
 
 **Jaké je zrychelní vůči sekveční verzi? Zdůvodněte.** *(Provedu to smyčkou #pragma acc parallel loop seq)*
-
+Zvolil som odlisny pristup vypoctu oproti referencej CPU verzii. Kym CPU implementacia pouziva
+inkrementalnu metodu, ja pocitam COM ako priamy vazeny sucet pozicii. Tento pristup
+som zvolil kvoli mensej nachylnosti na akumulovane numericke chyby za cenu niektorych narocnejsich operacii
+(3 delenia pri kazdom vypocte). Z tohto dovodu sa moje vysledky taziska lisia od referencnej (N=4096, steps=100),
+no rozdiely su stale zanedbatelne.
+Namiesto dovetku seq vyuzivam reduction pre jednotlive hodnoty taziska (jeho poloha a celkova hmotnost systemu).
 
 ### Krok 4: Měření výkonu
 **Jakých jste dosáhli výsledků?**
+So zvysujucim sa poctom castic vyrazne narasta znovupouzite dat pri vypocte. To znamena ze pri
+vacsich systemoch nie je vypocet brzdeny priepustnostou pamate ale iba samotnym vykonom akceleratora.
+Pri velkosti N=65536 a N=131072 som narazil na limit vypoctovy limit ~6TF co je vsak stale hlboko
+pod teoretickym vykonom karty (19.5TF).
 
 **Lze v datech pozorovat nějaké anomálie?**
+Vo vysledkoch mozno vidiet prudky pokles priepustnosti pamati medzi poctom castic N=65536
+(0.138GiB/s) a N=131072 (0.068037GiB/s).

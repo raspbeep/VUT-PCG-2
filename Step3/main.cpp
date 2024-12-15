@@ -1,10 +1,10 @@
 /**
  * @file      main.cpp
  *
- * @author    Name Surname \n
+ * @author    Pavel Kratochvil \n
  *            Faculty of Information Technology \n
  *            Brno University of Technology \n
- *            xlogin00@fit.vutbr.cz
+ *            xkrato61@fit.vutbr.cz
  *
  * @brief     PCG Assignment 2
  *
@@ -101,9 +101,7 @@ int main(int argc, char **argv)
   /********************************************************************************************************************/
   /*                                      TODO: Set openacc stream ids                                                */
   /********************************************************************************************************************/
-  // #pragma acc set device_num(calculateVelocityStream) device_type(acc_device_nvidia)
-  // #pragma acc set device_num(centerOfMassStream) device_type(acc_device_nvidia)
-  // #pragma acc set device_num(dataTransferStream) device_type(acc_device_nvidia)
+  // defines in nbody.h are used for stream indexes
 
   /********************************************************************************************************************/
   /*                                     TODO: Memory transfer CPU -> GPU                                             */
@@ -154,7 +152,7 @@ int main(int argc, char **argv)
       #pragma acc update host(particles[srcIdx].velocities[0:N]) async(dataTransferStream)
 
       // clear the comBuffer in device
-      std::memset(comBuffer, 0, sizeof(float) * 4);
+      // std::memset(comBuffer, 0, sizeof(float) * 4);
       // clear the comBuffer in device
       #pragma acc data copyin(comBuffer[0:4]) copyout(comBuffer[0:4])
       {
@@ -178,7 +176,7 @@ int main(int argc, char **argv)
   /*                          TODO: Invocation of center of mass kernel, do not forget to add                         */
   /*                              additional synchronization and set appropriate stream                               */
   /********************************************************************************************************************/
-  std::memset(comBuffer, 0, sizeof(float) * 4);
+  // std::memset(comBuffer, 0, sizeof(float) * 4);
   #pragma acc data copyin(comBuffer[0:4]) copyout(comBuffer[0:4])
   {
     centerOfMass(particles[resIdx], comBuffer, N);
